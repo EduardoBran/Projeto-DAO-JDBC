@@ -66,3 +66,12 @@ public class Department implements Serializable { //Serializable é ncessário par
 		return "Department [id=" + id + ", name=" + name + "]";
 	}
 }
+/*
+ Entity class checklist:
+ -Atributos
+ -Constructores
+ -Getters/Setters
+ -hashCode and equals
+ -toString
+ -implements Serializable 
+*/ 
