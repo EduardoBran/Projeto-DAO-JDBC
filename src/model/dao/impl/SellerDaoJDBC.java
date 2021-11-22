@@ -62,17 +62,9 @@ public class SellerDaoJDBC implements SellerDao{
 			
 			if (rs.next()) { //testa para ver se veio algum resultado / se a consulta retorna algum registro
 				
-				Department dep = new Department();
-				dep.setId(rs.getInt("DepartmentId"));
-				dep.setName(rs.getString("DepName"));
+				Department dep = instantiateDepartment(rs);
 				
-				Seller obj = new Seller(); //criar obj Seller associando para departament
-				obj.setId(rs.getInt("Id"));
-				obj.setName(rs.getString("Name"));
-				obj.setEmail(rs.getString("Email"));
-				obj.setBaseSalary(rs.getDouble("BaseSalary"));
-				obj.setBirthDate(rs.getDate("BirthDate"));
-				obj.setDepartment(dep); //departamento associado a este Seller
+				Seller obj = instantiateSeller(rs, dep);
 				
 				return obj;
 				
@@ -87,7 +79,29 @@ public class SellerDaoJDBC implements SellerDao{
 			DB.closeResultSet(rs); 
 			//não fecha a conexão pois vamos usar em outras funçoes dentro desta Classe
 		}		
+	}	
+
+	private Department instantiateDepartment(ResultSet rs) throws SQLException {
+		
+		Department dep = new Department();
+		dep.setId(rs.getInt("DepartmentId"));
+		dep.setName(rs.getString("DepName"));
+		return dep;
 	}
+
+	private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
+
+		Seller obj = new Seller(); //criar obj Seller associando para departament
+		obj.setId(rs.getInt("Id"));
+		obj.setName(rs.getString("Name"));
+		obj.setEmail(rs.getString("Email"));
+		obj.setBaseSalary(rs.getDouble("BaseSalary"));
+		obj.setBirthDate(rs.getDate("BirthDate"));
+		obj.setDepartment(dep); //departamento associado a este Seller
+		
+		return obj;
+	}
+
 
 	@Override
 	public List<Seller> findAll() {
