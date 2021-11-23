@@ -12,3 +12,14 @@ FROM seller INNER JOIN department
 ON seller.DepartmentId = department.Id - Busca os dados das duas tabelas
 
 WHERE seller.Id = ? - restrição onde o id do vendedor seja igual a ?(valor que eu quiser)
+
+
+findByDepartment = buscando os vendedores dado o departamento
+
+Mostra todos os vendedores cujo o departamento for ?
+
+SELECT seller.*, department.Name as DepName
+FROM seller INNER JOIN department
+ON seller.DepartmentId = department.Id
+WHERE DepartmentId = ?
+ORDER BY Name
