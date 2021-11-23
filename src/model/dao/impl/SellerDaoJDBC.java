@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +27,47 @@ public class SellerDaoJDBC implements SellerDao{
 	
 	@Override
 	public void insert(Seller obj) {
-
 		
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(  
+					"INSERT INTO seller "
+					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+					+ "VALUES "
+					+ "(?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS //RETORNA o Id do novo vendedor inserido
+					);			
+			
+			st.setString(1, obj.getName());
+			st.setString(2, obj.getEmail());
+			st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime())); //instanciando uma Data do SQL
+			st.setDouble(4, obj.getBaseSalary());
+			st.setInt(5, obj.getDepartment().getId()); //a partir de department colocar o get id
+			
+			int rowsAffected = st.executeUpdate();
+			
+			if (rowsAffected > 0) {
+				ResultSet rs = st.getGeneratedKeys();
+				
+				if(rs.next()) { //if pq está inserindo um dado
+					
+					int id = rs.getInt(1); //pegando o valor do Id gerado(posição 1 pq é a primeira coluna das chaves (id do novo vendedor))
+					obj.setId(id); //atribuido o Id gerado dentro do objeto obj para que ja fique populado.
+				}
+				DB.closeResultSet(rs);
+			}
+			else {//caso tenha ocorrido a inserção mas nenhuma linha foi alterada
+				throw new DbException("Unexpected error! No rows affected");
+			}
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st); 
+			//não fecha a conexão pois vamos usar em outras funçoes dentro desta Classe
+		}		
 	}
 
 	@Override
@@ -166,7 +206,7 @@ public class SellerDaoJDBC implements SellerDao{
 			
 			while (rs.next()) { 	 //percorrer o resultset enquanto tiver um proximo.			
 				
-				Department dep = map.get(rs.getInt("DepartmentId")); //Teste para ver se o Department já existe, atraves do map.get eu tento buscar em Department um departamento DepartmentId
+				Department dep = map.get(rs.getInt("DepartmentId")); //Teste para ver se o Department já existe, atraves do map.get eu tento buscar em Department um departamento DepartmentId. Se nao existir DepartmentId ele retorna null
 				
 				if(dep == null) { //testando se o departamento ja existe, se for nulo eu vou instanciar um novo departamento e salvar dentro do Map
 					
