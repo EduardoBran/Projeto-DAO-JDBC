@@ -59,18 +59,12 @@ public class SellerDaoJDBC implements SellerDao{
 			st.setInt(1, id);
 			rs = st.executeQuery();
 			
-			//quando estamos programando um sistema orientado a objetos, mesmo eu
-			//buscando os dados na forma de tabela, na memórica do computador, precisamos
-			//ter os objetos associados instanciados em memória.
-			
-			if (rs.next()) { //testa para ver se veio algum resultado / se a consulta retorna algum registro
+			if (rs.next()) { //testa para ver se tem o ID escolhido retorna algum vendedor
 				
-				Department dep = instantiateDepartment(rs);
-				
+				Department dep = instantiateDepartment(rs);				
 				Seller obj = instantiateSeller(rs, dep);
 				
-				return obj;
-				
+				return obj;				
 			}
 			return null; //retorna null pq nao existe nenhum vendedor com o Id escolhido (WHERER seller.Id = ?)
 			
@@ -84,7 +78,7 @@ public class SellerDaoJDBC implements SellerDao{
 		}		
 	}	
 
-	private Department instantiateDepartment(ResultSet rs) throws SQLException {
+	private Department instantiateDepartment(ResultSet rs) throws SQLException { //throws SQLException - delegando a exceção
 		
 		Department dep = new Department();
 		dep.setId(rs.getInt("DepartmentId"));
@@ -94,7 +88,7 @@ public class SellerDaoJDBC implements SellerDao{
 
 	private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
 
-		Seller obj = new Seller(); //criar obj Seller associando para departament
+		Seller obj = new Seller();
 		obj.setId(rs.getInt("Id"));
 		obj.setName(rs.getString("Name"));
 		obj.setEmail(rs.getString("Email"));
@@ -104,7 +98,6 @@ public class SellerDaoJDBC implements SellerDao{
 		
 		return obj;
 	}
-
 
 	@Override
 	public List<Seller> findAll() {
@@ -123,7 +116,7 @@ public class SellerDaoJDBC implements SellerDao{
 			rs = st.executeQuery();
 			
 			List<Seller> list = new ArrayList<>();
-			Map<Integer, Department> map = new HashMap<>(); //foi criado um Map vazio.
+			Map<Integer, Department> map = new HashMap<>(); 
 			
 			while (rs.next()) { 			
 				
@@ -168,17 +161,17 @@ public class SellerDaoJDBC implements SellerDao{
 			st.setInt(1, department.getId());
 			rs = st.executeQuery();
 			
-			List<Seller> list = new ArrayList<>();
-			Map<Integer, Department> map = new HashMap<>(); //foi criado um Map vazio.
+			List<Seller> list = new ArrayList<>(); //Criada a lista pq são vários valores e tb pq o método retorna uma lista
+			Map<Integer, Department> map = new HashMap<>(); //foi criado um Map vazio cujo a chave é Integer(id do departamento) e valor de cada objeto vai ser do tipo Department.
 			
 			while (rs.next()) { 	 //percorrer o resultset enquanto tiver um proximo.			
 				
-				Department dep = map.get(rs.getInt("DepartmentId")); //guardando dentro do map qualquer departamento q for instanciado
+				Department dep = map.get(rs.getInt("DepartmentId")); //Teste para ver se o Department já existe, atraves do map.get eu tento buscar em Department um departamento DepartmentId
 				
 				if(dep == null) { //testando se o departamento ja existe, se for nulo eu vou instanciar um novo departamento e salvar dentro do Map
 					
 					dep = instantiateDepartment(rs);
-					map.put(rs.getInt("DepartmentId"), dep);
+					map.put(rs.getInt("DepartmentId"), dep); //salvando o departamento dentro do map para que não o instancie novamente
 				}
 				
 				Seller obj = instantiateSeller(rs, dep);

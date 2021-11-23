@@ -11,7 +11,7 @@ public interface SellerDao {
 	void update(Seller obj);
 	void deleteById(Integer id);
 	
-	Seller findById(Integer id); //responsavel por pegar essa Id e consultar no banco de dados um obj com esse Id
+	Seller findById(Integer id); //responsavel por pegar essa Id e consultar no banco de dados um vendedor com esse Id
 	List<Seller> findAll();	
 	
 	List<Seller> findByDepartment(Department department);  //Buscar por departamento
