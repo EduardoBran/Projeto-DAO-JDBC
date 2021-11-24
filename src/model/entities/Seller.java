@@ -3,7 +3,7 @@ package model.entities;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Seller implements Serializable{
+public class Seller implements Serializable{ //Serializable é ncessário para que nosso objeto sja gravado em arquivo, trafegado em rede 
 	
 	private static final long serialVersionUID = 1L;
 	

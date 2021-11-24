@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
-import model.dao.impl.SellerDaoJDBC;
 import model.entities.Department;
 import model.entities.Seller;
 
@@ -28,7 +27,7 @@ public class Program {
 		
 		System.out.println("========== TEST 2: seller findByDepartment ==========");
 		System.out.println();
-		
+			
 		Department department = new Department(2, null); //2 id do departamento
 		List<Seller> list = sellerDao.findByDepartment(department);
 		for (Seller obj : list) {
